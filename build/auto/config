@@ -24,10 +24,7 @@ lb config noauto \
     --iso-application "NovaForge Linux" \
     --iso-publisher "NovaForge Linux Project; https://github.com/novaforge-linux" \
     --iso-volume "NovaForge-Linux" \
-    --debootstrap-options "--variant=minbase" \
     --apt-recommends true \
-    --security true \
-    --updates true \
     --cache true \
     --cache-packages true \
     "${@}"

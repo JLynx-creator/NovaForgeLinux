@@ -88,11 +88,23 @@ class AIModelsPage(QWidget):
         self.status_label.setFont(QFont("Inter", 12))
         self.status_label.setStyleSheet("color: #cdd6f4; border: none;")
         status_layout.addWidget(self.status_label)
+        status_layout.addStretch()
 
-        self.btn_refresh = QPushButton(" 🔄 Refresh")
+        self.btn_refresh = QPushButton("🔄 Refresh")
         self.btn_refresh.setCursor(Qt.PointingHandCursor)
         self.btn_refresh.clicked.connect(self._refresh_models)
         status_layout.addWidget(self.btn_refresh)
+
+        self.btn_start = QPushButton("▶️ Start")
+        self.btn_start.setCursor(Qt.PointingHandCursor)
+        self.btn_start.clicked.connect(self._start_ollama)
+        status_layout.addWidget(self.btn_start)
+
+        self.btn_stop = QPushButton("⏹️ Stop")
+        self.btn_stop.setCursor(Qt.PointingHandCursor)
+        self.btn_stop.clicked.connect(self._stop_ollama)
+        status_layout.addWidget(self.btn_stop)
+
         layout.addWidget(status_frame)
 
         # Main Workspace Split
@@ -185,9 +197,27 @@ class AIModelsPage(QWidget):
             self.status_label.setStyleSheet("color: #a6e3a1; border: none;")
             for m in models:
                 self.models_list.addItem(m)
+            self.btn_start.setEnabled(False)
+            self.btn_stop.setEnabled(True)
         else:
-            self.status_label.setText("🔴 Ollama Service offline (Make sure Ollama is started)")
-            self.status_label.setStyleSheet("color: #f38ba8; border: none;")
+            import subprocess
+            res = subprocess.run(["systemctl", "is-active", "ollama"], capture_output=True, text=True)
+            status = res.stdout.strip()
+            if status == "active":
+                self.status_label.setText("🟡 Ollama service starting/initializing...")
+                self.status_label.setStyleSheet("color: #f9e2af; border: none;")
+                self.btn_start.setEnabled(False)
+                self.btn_stop.setEnabled(True)
+            elif status == "inactive" or status == "failed":
+                self.status_label.setText("🔴 Ollama service is stopped")
+                self.status_label.setStyleSheet("color: #f38ba8; border: none;")
+                self.btn_start.setEnabled(True)
+                self.btn_stop.setEnabled(False)
+            else:
+                self.status_label.setText("🔴 Ollama service offline or not found")
+                self.status_label.setStyleSheet("color: #f38ba8; border: none;")
+                self.btn_start.setEnabled(True)
+                self.btn_stop.setEnabled(False)
 
     def _download_model(self):
         model_name = self.model_input.text().strip()
@@ -220,3 +250,25 @@ class AIModelsPage(QWidget):
             subprocess.Popen(["/usr/bin/novaforge-openwebui"])
         except Exception as e:
             QMessageBox.critical(self, "Launch Error", f"Could not launch WebUI: {str(e)}")
+
+    def _start_ollama(self):
+        import subprocess
+        self.status_label.setText("Starting Ollama service...")
+        self.btn_start.setEnabled(False)
+        try:
+            subprocess.run(["pkexec", "systemctl", "start", "ollama"], check=True)
+            QMessageBox.information(self, "Ollama Service", "Ollama service started successfully!")
+        except Exception as e:
+            QMessageBox.critical(self, "Ollama Service", f"Failed to start Ollama: {str(e)}")
+        self._refresh_models()
+
+    def _stop_ollama(self):
+        import subprocess
+        self.status_label.setText("Stopping Ollama service...")
+        self.btn_stop.setEnabled(False)
+        try:
+            subprocess.run(["pkexec", "systemctl", "stop", "ollama"], check=True)
+            QMessageBox.information(self, "Ollama Service", "Ollama service stopped successfully!")
+        except Exception as e:
+            QMessageBox.critical(self, "Ollama Service", f"Failed to stop Ollama: {str(e)}")
+        self._refresh_models()

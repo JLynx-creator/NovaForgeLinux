@@ -55,11 +55,14 @@ jobs:
       - name: Print Build Log on Failure
         if: failure()
         run: |
-          echo "=== Last 200 lines of build.log ==="
+          echo "=== Last 200 lines of build output ==="
           if [ -f build/build.log ]; then
             tail -n 200 build/build.log
+          elif [ -f build.log ]; then
+            tail -n 200 build.log
           else
             echo "build.log not found!"
+            find . -name "*.log" -type f 2>/dev/null | head -10
           fi
 
       - name: Upload Build Log on Failure
@@ -67,7 +70,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: live-build-error-log
-          path: build/build.log
+          path: |
+            build/build.log
+            build.log
           retention-days: 2
           if-no-files-found: warn
 
