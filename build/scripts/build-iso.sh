@@ -6,11 +6,16 @@
 # Usage: sudo bash build-iso.sh [version]
 # ============================================================
 
-set -e
+set -ex
 
 VERSION="${1:-$(cat ../VERSION 2>/dev/null || echo '1.0.0')}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Navigate to build directory and redirect all stdout/stderr to build.log
+cd "$BUILD_DIR"
+touch build.log
+exec > >(tee -a build.log) 2>&1
 
 # Colors
 CYAN='\033[0;36m'
@@ -44,9 +49,6 @@ for cmd in lb debootstrap xorriso mksquashfs; do
 done
 echo -e "${GREEN}[NovaForge]${NC} All dependencies found."
 
-# Navigate to build directory
-cd "$BUILD_DIR"
-
 # Clean previous build if exists
 if [ -d ".build" ]; then
     echo -e "${YELLOW}[NovaForge]${NC} Cleaning previous build..."
@@ -75,9 +77,8 @@ EOF
 echo -e "${CYAN}[NovaForge]${NC} Starting build (this may take 30-60 minutes)..."
 echo -e "${CYAN}[NovaForge]${NC} Build started at: $(date)"
 
-lb build 2>&1 | tee build.log
-
-BUILD_EXIT=${PIPESTATUS[0]}
+lb build
+BUILD_EXIT=$?
 
 if [ $BUILD_EXIT -eq 0 ]; then
     echo ""
