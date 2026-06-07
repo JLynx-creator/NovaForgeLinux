@@ -70,7 +70,7 @@ iso: $(OUTPUT_DIR)
 	@echo "  ╚══════════════════════════════════════════════╝"
 	@echo -e "$(NC)"
 	@echo -e "$(YELLOW)[NovaForge]$(NC) Starting ISO build process..."
-	@cd $(BUILD_DIR) && sudo bash scripts/build-iso.sh $(VERSION)
+	@sudo bash $(BUILD_DIR)/scripts/build-iso.sh $(VERSION)
 	@if [ -f $(BUILD_DIR)/*.iso ]; then \
 		mv $(BUILD_DIR)/*.iso $(OUTPUT_DIR)/$(ISO_NAME).iso; \
 		echo -e "$(GREEN)[NovaForge]$(NC) ISO built successfully!"; \
