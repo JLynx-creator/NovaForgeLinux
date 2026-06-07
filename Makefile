@@ -16,7 +16,7 @@ SHELL := /bin/bash
 
 # Configuration
 VERSION := $(shell cat VERSION 2>/dev/null || echo "0.0.0")
-ISO_NAME := novaforge-linux-$(VERSION)
+ISO_NAME := novaforge-linux-$(VERSION)-amd64
 BUILD_DIR := build
 OUTPUT_DIR := output
 LOG_FILE := build.log
@@ -71,8 +71,7 @@ iso: $(OUTPUT_DIR)
 	@echo -e "$(NC)"
 	@echo -e "$(YELLOW)[NovaForge]$(NC) Starting ISO build process..."
 	@sudo bash $(BUILD_DIR)/scripts/build-iso.sh $(VERSION)
-	@if [ -f $(BUILD_DIR)/*.iso ]; then \
-		mv $(BUILD_DIR)/*.iso $(OUTPUT_DIR)/$(ISO_NAME).iso; \
+	@if [ -f $(OUTPUT_DIR)/$(ISO_NAME).iso ]; then \
 		echo -e "$(GREEN)[NovaForge]$(NC) ISO built successfully!"; \
 		echo -e "$(GREEN)[NovaForge]$(NC) Output: $(OUTPUT_DIR)/$(ISO_NAME).iso"; \
 		ls -lh $(OUTPUT_DIR)/$(ISO_NAME).iso; \

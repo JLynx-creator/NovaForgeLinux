@@ -27,10 +27,10 @@ jobs:
 
       - name: Install Build Dependencies
         run: |
-          echo "=== Installing live-build and tools ==="
+          echo "=== Installing build tools and GRUB dependencies ==="
           sudo apt-get update
           sudo apt-get install -y \
-            live-build \
+            grub-common \
             debootstrap \
             xorriso \
             squashfs-tools \
