@@ -1,0 +1,89 @@
+#!/bin/bash
+# ============================================================
+# NovaForge Linux — Open WebUI Launcher
+# ============================================================
+# Automates Docker checks, downloads/starts Open WebUI,
+# and opens the browser for offline AI workspace chats.
+# ============================================================
+
+# Colors
+CYAN='\033[0;36m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+RED='\033[0;31m'
+NC='\033[0m'
+BOLD='\033[1m'
+
+echo -e "${CYAN}${BOLD}=== NovaForge AI Workspace: Launching Open WebUI ===${NC}"
+
+# 1. Check if Docker is installed
+if ! command -v docker &>/dev/null; then
+    echo -e "${RED}Error: Docker is not installed on this system.${NC}"
+    echo -e "Please run: ${GREEN}sudo apt install docker.io${NC}"
+    exit 1
+fi
+
+# 2. Check if Docker daemon is active
+if ! systemctl is-active --quiet docker; then
+    echo -e "${YELLOW}Docker is not running. Starting Docker service...${NC}"
+    # Use pkexec (Polkit) to request privileges graphically, or sudo if CLI
+    if [ -n "$DISPLAY" ]; then
+        pkexec systemctl start docker
+    else
+        sudo systemctl start docker
+    fi
+    
+    # Wait for Docker to start
+    sleep 3
+    if ! systemctl is-active --quiet docker; then
+        echo -e "${RED}Failed to start Docker daemon. Please check systemd logs.${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}Docker daemon started successfully.${NC}"
+fi
+
+# 3. Check if current user is in docker group (to run without sudo)
+# If not, we will prefix docker commands with sudo or pkexec
+DOCKER_CMD="docker"
+if ! groups | grep -q "\bdocker\b"; then
+    echo -e "${YELLOW}Notice: Current user is not in the 'docker' group.${NC}"
+    echo -e "Running docker commands with sudo privileges..."
+    DOCKER_CMD="sudo docker"
+fi
+
+# 4. Check container status
+CONTAINER_NAME="open-webui"
+
+if $DOCKER_CMD ps -a --format '{{.Names}}' | grep -Eq "^${CONTAINER_NAME}$"; then
+    # Container exists, check if running
+    if $DOCKER_CMD ps --format '{{.Names}}' | grep -Eq "^${CONTAINER_NAME}$"; then
+        echo -e "${GREEN}Open WebUI is already running.${NC}"
+    else
+        echo -e "${YELLOW}Starting existing Open WebUI container...${NC}"
+        $DOCKER_CMD start $CONTAINER_NAME
+    fi
+else
+    # Container does not exist, pull and run it
+    echo -e "${CYAN}Creating new Open WebUI Docker container...${NC}"
+    echo -e "This may take a few minutes on the first run to download assets..."
+    
+    $DOCKER_CMD run -d \
+        -p 3000:8080 \
+        --add-host=host.docker.internal:host-gateway \
+        -v open-webui:/app/backend/data \
+        --name $CONTAINER_NAME \
+        --restart always \
+        ghcr.io/open-webui/open-webui:main
+        
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}Failed to create Open WebUI container. Docker returned error.${NC}"
+        exit 1
+    fi
+fi
+
+# 5. Open Web Browser
+echo -e "${GREEN}Opening browser at http://localhost:3000 ...${NC}"
+sleep 2
+xdg-open "http://localhost:3000" &>/dev/null &
+
+echo -e "${GREEN}${BOLD}Launch complete!${NC}"

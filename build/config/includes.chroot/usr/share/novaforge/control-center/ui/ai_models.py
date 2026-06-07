@@ -146,6 +146,25 @@ class AIModelsPage(QWidget):
         down_layout.addWidget(self.progress_bar)
 
         right_layout.addWidget(down_frame)
+
+        # WebUI Card
+        webui_label = QLabel("Web Chat Interface")
+        webui_label.setFont(QFont("Inter", 14, QFont.DemiBold))
+        webui_label.setStyleSheet("color: #cdd6f4; margin-top: 12px;")
+        right_layout.addWidget(webui_label)
+
+        webui_frame = QFrame()
+        webui_frame.setStyleSheet("QFrame { background-color: #1e1e2e; border: 1px solid #313244; border-radius: 12px; padding: 16px; }")
+        webui_layout = QVBoxLayout(webui_frame)
+
+        self.btn_webui = QPushButton("🌐  Launch Open WebUI")
+        self.btn_webui.setObjectName("primaryButton")
+        self.btn_webui.setMinimumHeight(36)
+        self.btn_webui.setCursor(Qt.PointingHandCursor)
+        self.btn_webui.clicked.connect(self._launch_webui)
+        webui_layout.addWidget(self.btn_webui)
+
+        right_layout.addWidget(webui_frame)
         right_layout.addStretch()
         split_layout.addLayout(right_layout, 1)
 
@@ -194,3 +213,10 @@ class AIModelsPage(QWidget):
             self._refresh_models()
         else:
             QMessageBox.critical(self, "Download Error", msg)
+
+    def _launch_webui(self):
+        import subprocess
+        try:
+            subprocess.Popen(["/usr/bin/novaforge-openwebui"])
+        except Exception as e:
+            QMessageBox.critical(self, "Launch Error", f"Could not launch WebUI: {str(e)}")

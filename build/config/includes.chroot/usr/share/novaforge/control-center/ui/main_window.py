@@ -16,6 +16,7 @@ from ui.dashboard import DashboardPage
 from ui.profiles import ProfilesPage
 from ui.drivers import DriversPage
 from ui.ai_models import AIModelsPage
+from ui.gaming import GamingPage
 from ui.updates import UpdatesPage
 
 
@@ -81,6 +82,7 @@ class MainWindow(QMainWindow):
             ("Profiles", "⚡"),
             ("Drivers", "🖥️"),
             ("AI Workspace", "🤖"),
+            ("Gaming Tools", "🎮"),
             ("Updates", "🔄"),
         ]
 
@@ -109,6 +111,7 @@ class MainWindow(QMainWindow):
         self.stack.addWidget(ProfilesPage())
         self.stack.addWidget(DriversPage())
         self.stack.addWidget(AIModelsPage())
+        self.stack.addWidget(GamingPage())
         self.stack.addWidget(UpdatesPage())
 
         layout.addWidget(self.stack)
@@ -119,7 +122,7 @@ class MainWindow(QMainWindow):
 
     def _navigate(self, page_name):
         """Switch to the selected page."""
-        pages = ["Dashboard", "Profiles", "Drivers", "AI Workspace", "Updates"]
+        pages = ["Dashboard", "Profiles", "Drivers", "AI Workspace", "Gaming Tools", "Updates"]
         index = pages.index(page_name) if page_name in pages else 0
 
         self.stack.setCurrentIndex(index)

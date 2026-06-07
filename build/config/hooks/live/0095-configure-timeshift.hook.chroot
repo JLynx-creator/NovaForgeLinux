@@ -1,0 +1,51 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0095: Configure Timeshift Recovery
+# ============================================================
+# Establishes default Timeshift backups and enables GRUB BTRFS
+# snapshot listings in the boot menu.
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Configuring Timeshift & GRUB BTRFS ==="
+
+# 1. Create Timeshift configuration directory
+mkdir -p /etc/timeshift
+
+# 2. Write standard Timeshift defaults (BTRFS auto-snapshots enabled)
+cat > /etc/timeshift/timeshift.json << EOF
+{
+  "backup_device_uuid" : "",
+  "parent_backup_device_uuid" : "",
+  "do_first_run" : "false",
+  "btrfs_mode" : "true",
+  "include_btrfs_home_for_backup" : "false",
+  "include_btrfs_home_for_restore" : "false",
+  "schedule_monthly" : "true",
+  "schedule_weekly" : "true",
+  "schedule_daily" : "true",
+  "schedule_hourly" : "false",
+  "schedule_boot" : "true",
+  "count_monthly" : "1",
+  "count_weekly" : "2",
+  "count_daily" : "5",
+  "count_hourly" : "0",
+  "count_boot" : "3",
+  "run_dist_upgrade" : "true",
+  "exclude" : [
+    "/home/ubuntu/**",
+    "/root/**"
+  ],
+  "exclude-apps" : []
+}
+EOF
+
+# 3. Enable the grub-btrfs systemd service to monitor snapshots
+if systemctl list-unit-files | grep -q grub-btrfsd; then
+    echo "[Timeshift Hook] Enabling grub-btrfsd service..."
+    systemctl enable grub-btrfsd.service || true
+else
+    echo "[Timeshift Hook] grub-btrfsd service not found. Skipping enable."
+fi
+
+echo "=== NovaForge Hook: Timeshift & GRUB BTRFS configured ==="

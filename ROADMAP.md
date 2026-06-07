@@ -26,40 +26,30 @@ NovaForge Linux aims to be the premier Ubuntu-based distribution for creators wh
 
 ---
 
-## v1.1.0 — "Nebula"
+## v2.0.0 — "Supernova" (Current)
 
-> *Expanding the ecosystem. More themes, more polish.*
+> *Major milestone. Advanced tools, local AI web UI, custom installer, and system recovery.*
 
-- [ ] Flatpak + Flathub pre-configured
-- [ ] Additional wallpaper collection (community submissions)
-- [ ] Light mode theme variant
-- [ ] Welcome application with setup wizard
-- [ ] NovaForge icon pack (custom app icons)
-- [ ] Improved Control Center with system monitoring graphs
-- [ ] Firefox/Chromium with pre-configured privacy settings
-- [ ] OBS Studio pre-installed for streaming
-- [ ] Timeshift auto-configured for system snapshots
-
----
-
-## v1.2.0 — "Pulsar"
-
-> *Installation experience and deeper integration.*
-
-- [ ] Calamares custom installer with NovaForge branding
-- [ ] Guided setup wizard (choose profile on first boot)
-- [ ] Custom file manager theme (Dolphin)
-- [ ] Notification center styling
-- [ ] KWin window decoration theme
-- [ ] Improved SDDM with user avatar management
-- [ ] System-wide font rendering optimization
-- [ ] Kernel parameter tuning per profile
+- [x] Ubuntu 24.04 LTS base
+- [x] KDE Plasma 6 with custom global theme
+- [x] Custom GRUB, Plymouth, SDDM themes
+- [x] Hybrid panel layout (top bar + floating dock)
+- [x] Dark mode with neon accent color palette
+- [x] Zsh shell configured as default with Starship prompt, auto-suggestions, and syntax-highlighting
+- [x] Calamares custom installer with NovaForge branding and desktop shortcut
+- [x] Timeshift auto-configured for system snapshots and GRUB recovery boot entries
+- [x] Offline Local AI Open WebUI launcher integrated into the Control Center
+- [x] Proton-GE gaming compatibility tool manager inside the Control Center
+- [x] Control Center dashboard upgraded with real-time vector graphs and process manager
+- [x] Pre-installed development stack (Git, VS Code, Node.js, Docker, Python, Ollama)
+- [x] Dynamic day/night wallpaper cycles (morning, day, evening, night gradient art)
+- [x] Automated ISO build pipeline (GitHub Actions)
 
 ---
 
-## v2.0.0 — "Supernova"
+## Future Roadmap
 
-> *Major expansion. New architectures and advanced tools.*
+> *Next development goals based on community feedback.*
 
 - [ ] ARM64 / Apple Silicon support
 - [ ] Advanced AI toolkit integration (vLLM, LangChain)
@@ -69,6 +59,7 @@ NovaForge Linux aims to be the premier Ubuntu-based distribution for creators wh
 - [ ] Gaming overlay redesign
 - [ ] Touch-screen / tablet mode
 - [ ] Custom Wayland compositor settings
+- [ ] Theme marketplace in Control Center
 
 ---
 

@@ -1,0 +1,38 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0075: Configure Zsh & Starship Prompt
+# ============================================================
+# Installs Starship, sets Zsh as default shell for users.
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Configuring Zsh & Starship ==="
+
+# 1. Install Starship prompt binary using the official script
+if ! command -v starship >/dev/null 2>&1; then
+    echo "[Zsh Hook] Installing Starship prompt..."
+    curl -sS https://starship.rs/install.sh | sh -s -- -y
+else
+    echo "[Zsh Hook] Starship prompt is already installed."
+fi
+
+# 2. Change default shell for root
+chsh -s /bin/zsh root
+
+# 3. Set Zsh as default shell for all new users created by useradd (e.g. during install)
+if [ -f /etc/default/useradd ]; then
+    sed -i 's|SHELL=/bin/sh|SHELL=/bin/zsh|g' /etc/default/useradd
+    sed -i 's|SHELL=/bin/bash|SHELL=/bin/zsh|g' /etc/default/useradd
+fi
+
+# 4. Set Zsh as default shell for Casper live user session creation
+mkdir -p /etc/casper.conf.d
+echo "export DSHELL=/bin/zsh" > /etc/casper.conf.d/novaforge-shell.conf
+
+# Also patch live-config if present
+if [ -f /etc/live/config.conf ]; then
+    sed -i 's|LIVE_USER_SHELL=/bin/bash|LIVE_USER_SHELL=/bin/zsh|g' /etc/live/config.conf
+    sed -i 's|LIVE_USER_SHELL=/bin/sh|LIVE_USER_SHELL=/bin/zsh|g' /etc/live/config.conf
+fi
+
+echo "=== NovaForge Hook: Zsh & Starship configured ==="

@@ -19,15 +19,23 @@ chmod +x /usr/share/novaforge/control-center/main.py
 # Create system launcher link
 ln -sf /usr/share/novaforge/control-center/main.py /usr/bin/novaforge-control-center
 
-# Set executable permission on AI chat script
+# Set executable permission on AI chat, webui, and wallpaper scripts
 if [ -f /usr/bin/novaforge-chat ]; then
     chmod +x /usr/bin/novaforge-chat
+fi
+if [ -f /usr/bin/novaforge-openwebui ]; then
+    chmod +x /usr/bin/novaforge-openwebui
+fi
+if [ -f /usr/bin/novaforge-wallpaper-scheduler ]; then
+    chmod +x /usr/bin/novaforge-wallpaper-scheduler
 fi
 
 # Fix launcher file permissions
 chmod 644 /usr/share/applications/novaforge-control-center.desktop
-if [ -f /usr/share/applications/novaforge-chat.desktop ]; then
-    chmod 644 /usr/share/applications/novaforge-chat.desktop
-fi
+for desktop in novaforge-chat.desktop novaforge-openwebui.desktop; do
+    if [ -f "/usr/share/applications/$desktop" ]; then
+        chmod 644 "/usr/share/applications/$desktop"
+    fi
+done
 
 echo "=== NovaForge Hook: Control Center installation completed ==="

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/novaforge-wallpaper-scheduler
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=NovaForge Dynamic Wallpaper
+Comment=Rotates desktop wallpaper based on local time
+X-KDE-StartupNotify=false
+X-KDE-UniqueApplet=true

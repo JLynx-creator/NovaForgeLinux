@@ -1,0 +1,49 @@
+#!/bin/bash
+# ============================================================
+# NovaForge Linux — Dynamic Wallpaper Scheduler
+# ============================================================
+# Periodically updates the KDE Plasma desktop wallpaper 
+# to match the time of day (morning, day, evening, night).
+# ============================================================
+
+WP_DIR="/usr/share/wallpapers/novaforge/contents/images"
+
+# Wait for Plasmashell to start up after login
+sleep 15
+
+while true; do
+    HOUR=$(date +%H)
+    
+    if [ "$HOUR" -ge 6 ] && [ "$HOUR" -lt 12 ]; then
+        IMAGE="morning.png"
+    elif [ "$HOUR" -ge 12 ] && [ "$HOUR" -lt 18 ]; then
+        IMAGE="day.png"
+    elif [ "$HOUR" -ge 18 ] && [ "$HOUR" -lt 22 ]; then
+        IMAGE="evening.png"
+    else
+        IMAGE="night.png"
+    fi
+    
+    # Check if the specific time-of-day image exists, fallback to default if not
+    if [ ! -f "$WP_DIR/$IMAGE" ]; then
+        # Check alternative default wallpaper names
+        if [ -f "$WP_DIR/3840x2160.png" ]; then
+            IMAGE="3840x2160.png"
+        else
+            IMAGE="1920x1080.png"
+        fi
+    fi
+    
+    # Set wallpaper via KDE Plasmashell DBus scripting
+    dbus-send --session --dest=org.kde.plasmashell --type=method_call /PlasmaShell org.kde.PlasmaShell.evaluateScript string:"
+    var Desktops = desktops();
+    for (var i=0; i<Desktops.length; i++) {
+        var d = Desktops[i];
+        d.currentConfigGroup = Array('Wallpaper', 'org.kde.image', 'General');
+        d.writeConfig('Image', 'file://$WP_DIR/$IMAGE');
+    }
+    " &>/dev/null
+    
+    # Sleep for 15 minutes before checking again
+    sleep 900
+done

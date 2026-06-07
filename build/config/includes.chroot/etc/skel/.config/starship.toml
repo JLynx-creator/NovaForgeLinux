@@ -1,0 +1,49 @@
+# ============================================================
+# NovaForge Linux — Starship Cyber-Neon Prompt Configuration
+# ============================================================
+
+# Disable the blank line at the start of the prompt
+add_newline = false
+
+format = """
+[┌──](bold fg:#7c3aed) $directory$git_branch$git_status$c$python$nodejs$docker_context
+[└─](bold fg:#7c3aed)[▶](bold fg:#00e5ff) """
+
+[directory]
+style = "bold fg:#00e5ff"
+format = "[$path]($style) "
+truncation_length = 3
+truncation_symbol = "../"
+
+[git_branch]
+symbol = " "
+style = "bold fg:#7c3aed"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "bold fg:#f59e0b"
+format = "[$all_status$ahead_behind]($style) "
+
+[character]
+success_symbol = "[▶](bold fg:#00e5ff)"
+error_symbol = "[▶](bold fg:#f38ba8)"
+
+[c]
+symbol = " "
+style = "bold fg:#7c3aed"
+format = "via [$symbol($version)]($style) "
+
+[python]
+symbol = " "
+style = "bold fg:#00e5ff"
+format = "via [$symbol($version)]($style) "
+
+[nodejs]
+symbol = " "
+style = "bold fg:#a6e3a1"
+format = "via [$symbol($version)]($style) "
+
+[docker_context]
+symbol = " "
+style = "bold fg:#7c3aed"
+format = "via [$symbol($context)]($style) "

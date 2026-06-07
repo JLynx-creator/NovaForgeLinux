@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=NovaForge AI WebUI
+Comment=Open WebUI offline chat interface for Ollama
+Exec=konsole -e novaforge-openwebui
+Icon=internet-web-browser
+Terminal=false
+Type=Application
+Categories=Development;System;
+Keywords=ai;chat;webui;ollama;docker;local;
+StartupNotify=true

@@ -52,3 +52,12 @@ xdg-utils
 xdg-user-dirs
 xclip
 wl-clipboard
+
+# Zsh Shell & Tools
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting
+autojump
+
+# Snapshot GRUB Integration
+grub-btrfs
