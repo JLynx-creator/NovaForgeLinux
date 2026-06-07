@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Install NovaForge Linux
+GenericName=System Installer
+Comment=Install NovaForge Linux permanently to your system
+Exec=sudo calamares -d
+Icon=novaforge-logo
+Terminal=false
+Categories=System;Qt;
+Keywords=install;installer;calamares;setup;system;
+StartupNotify=true

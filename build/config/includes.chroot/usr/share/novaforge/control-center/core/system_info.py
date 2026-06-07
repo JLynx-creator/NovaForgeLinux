@@ -118,3 +118,36 @@ class SystemInfo:
         except FileNotFoundError:
             pass
         return "NovaForge Linux"
+
+    def get_top_processes(self, limit=5):
+        """Get list of top processes by CPU usage."""
+        processes = []
+        if HAS_PSUTIL:
+            try:
+                for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_info']):
+                    try:
+                        mem_mb = proc.info['memory_info'].rss / (1024 * 1024) if proc.info['memory_info'] else 0.0
+                        processes.append({
+                            'pid': proc.info['pid'],
+                            'name': proc.info['name'],
+                            'cpu': proc.info['cpu_percent'] or 0.0,
+                            'memory': mem_mb
+                        })
+                    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                        pass
+                # Sort processes by CPU usage descending
+                processes.sort(key=lambda x: x['cpu'], reverse=True)
+            except Exception:
+                pass
+        return processes[:limit]
+
+    def kill_process(self, pid):
+        """Terminate a process by PID."""
+        if HAS_PSUTIL:
+            try:
+                proc = psutil.Process(pid)
+                proc.terminate()
+                return True
+            except Exception:
+                pass
+        return False

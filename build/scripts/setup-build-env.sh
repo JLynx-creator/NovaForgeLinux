@@ -24,13 +24,17 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Check Ubuntu version
-if ! grep -q "noble\|24.04" /etc/os-release 2>/dev/null; then
-    echo -e "${RED}[NovaForge]${NC} WARNING: This script is designed for Ubuntu 24.04 LTS (Noble)."
+if ! grep -q "noble\|24.04\|jammy\|22.04" /etc/os-release 2>/dev/null; then
+    echo -e "${RED}[NovaForge]${NC} WARNING: This script is designed for Ubuntu 24.04 LTS (Noble) or 22.04 LTS (Jammy)."
     echo -e "${RED}[NovaForge]${NC} Building on other versions may cause issues."
-    read -p "Continue anyway? (y/N) " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        exit 1
+    if [ -t 0 ]; then
+        read -p "Continue anyway? (y/N) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
+    else
+        echo -e "${YELLOW}[NovaForge]${NC} Non-interactive environment detected. Continuing..."
     fi
 fi
 

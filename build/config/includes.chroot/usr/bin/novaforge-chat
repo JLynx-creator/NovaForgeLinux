@@ -1,0 +1,158 @@
+#!/usr/bin/env python3
+# ============================================================
+# NovaForge Linux — Offline AI Chat Client
+# ============================================================
+# Connects to local Ollama API to chat with downloaded LLMs.
+# Fully interactive, streams response, tracks chat history.
+# ============================================================
+
+import sys
+import json
+import urllib.request
+import urllib.error
+
+# Color definitions
+CYAN = '\033[0;36m'
+PURPLE = '\033[0;35m'
+GREEN = '\033[0;32m'
+YELLOW = '\033[0;33m'
+RED = '\033[0;31m'
+NC = '\033[0m'
+BOLD = '\033[1m'
+
+OLLAMA_URL = "http://localhost:11434"
+
+def print_header():
+    print(f"{CYAN}{BOLD}")
+    print("  ╔══════════════════════════════════════════════╗")
+    print("  ║         🤖 NovaForge AI Workspace 🤖         ║")
+    print("  ║             Offline Chat Client              ║")
+    print("  ╚══════════════════════════════════════════════╝")
+    print(f"{NC}")
+
+def check_ollama():
+    """Verify if Ollama service is reachable and return model list."""
+    try:
+        req = urllib.request.Request(f"{OLLAMA_URL}/api/tags")
+        with urllib.request.urlopen(req, timeout=3) as r:
+            res = json.loads(r.read().decode())
+            return True, [m['name'] for m in res.get('models', [])]
+    except Exception as e:
+        return False, []
+
+def chat_stream(model, messages):
+    """Call Ollama chat API and stream the response chunk by chunk."""
+    url = f"{OLLAMA_URL}/api/chat"
+    payload = {
+        "model": model,
+        "messages": messages,
+        "stream": True
+    }
+    data = json.dumps(payload).encode('utf-8')
+    req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
+    
+    try:
+        with urllib.request.urlopen(req, timeout=120) as r:
+            buffer = ""
+            for chunk in r:
+                if chunk:
+                    decoded = chunk.decode('utf-8')
+                    buffer += decoded
+                    while '\n' in buffer:
+                        line, buffer = buffer.split('\n', 1)
+                        if line:
+                            try:
+                                val = json.loads(line)
+                                content = val.get('message', {}).get('content', '')
+                                yield content
+                            except json.JSONDecodeError:
+                                pass
+    except Exception as e:
+        print(f"\n{RED}Error during chat stream: {e}{NC}")
+        return
+
+def main():
+    print_header()
+    
+    # 1. Check Ollama Status
+    print(f"{YELLOW}[AI] Checking local Ollama service...{NC}")
+    online, models = check_ollama()
+    
+    if not online:
+        print(f"{RED}🔴 Ollama Local Service is offline.{NC}")
+        print(f"\nTo use local AI models, please make sure Ollama is installed and active:")
+        print(f"  1. Start the Ollama service: {GREEN}sudo systemctl start ollama{NC}")
+        print(f"  2. Or toggle system profile to {CYAN}AI Mode{NC} in the NovaForge Control Center.")
+        sys.exit(1)
+        
+    if not models:
+        print(f"{YELLOW}🟢 Ollama is running, but no models were found.{NC}")
+        print(f"\nPlease download a model to get started:")
+        print(f"  • Open the {CYAN}NovaForge Control Center -> AI Workspace{NC} page.")
+        print(f"  • Or run a download in a terminal: {GREEN}ollama pull llama3{NC} (or mistral, phi3)")
+        sys.exit(1)
+        
+    # 2. Select Model
+    print(f"{GREEN}🟢 Ollama is online. Select a model to chat:{NC}")
+    for idx, model in enumerate(models):
+        print(f"  [{idx + 1}] {CYAN}{model}{NC}")
+        
+    selected_idx = -1
+    while selected_idx < 0 or selected_idx >= len(models):
+        try:
+            choice = input(f"\nEnter model number (1-{len(models)}): ").strip()
+            if not choice:
+                continue
+            selected_idx = int(choice) - 1
+            if selected_idx < 0 or selected_idx >= len(models):
+                print(f"{RED}Invalid choice. Enter a number between 1 and {len(models)}.{NC}")
+        except (ValueError, KeyboardInterrupt):
+            print(f"\n{YELLOW}Exiting AI Chat client.{NC}")
+            sys.exit(0)
+            
+    chosen_model = models[selected_idx]
+    print(f"\n{GREEN}Ready! Chatting with {BOLD}{chosen_model}{NC}.")
+    print(f"Type {PURPLE}exit{NC} or {PURPLE}quit{NC} to end, or {PURPLE}clear{NC} to reset memory.\n")
+    
+    # 3. Chat Loop
+    history = []
+    
+    while True:
+        try:
+            user_input = input(f"\n{PURPLE}{BOLD}User > {NC}").strip()
+            if not user_input:
+                continue
+                
+            if user_input.lower() in ['exit', 'quit']:
+                print(f"{YELLOW}Ending chat. Have a great day!{NC}")
+                break
+                
+            if user_input.lower() == 'clear':
+                history = []
+                print(f"{YELLOW}Chat memory cleared.{NC}")
+                continue
+                
+            # Add user input to history
+            history.append({"role": "user", "content": user_input})
+            
+            # Print assistant prompt
+            sys.stdout.write(f"\n{CYAN}{BOLD}Assistant > {NC}")
+            sys.stdout.flush()
+            
+            # Stream response
+            response_content = ""
+            for word in chat_stream(chosen_model, history):
+                sys.stdout.write(word)
+                sys.stdout.flush()
+                response_content += word
+            print()
+            
+            # Add assistant response to history
+            history.append({"role": "assistant", "content": response_content})
+            
+        except KeyboardInterrupt:
+            print(f"\n{YELLOW}Chat session interrupted. Goodbye!{NC}")
+            break
+            
+if __name__ == "__main__":
+    main()

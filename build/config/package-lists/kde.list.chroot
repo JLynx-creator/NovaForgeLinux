@@ -58,3 +58,7 @@ plasma-nm
 # Printing (optional, can be disabled)
 print-manager
 cups
+
+# System Installer (Calamares)
+calamares
+calamares-settings-ubuntu

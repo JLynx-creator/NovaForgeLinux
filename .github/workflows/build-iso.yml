@@ -6,9 +6,12 @@ on:
       - 'v*'
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -48,6 +51,25 @@ jobs:
           echo "=== Starting compilation ==="
           # Execute build with sudo since live-build mounts loop devices and changes root namespaces
           sudo make iso
+
+      - name: Print Build Log on Failure
+        if: failure()
+        run: |
+          echo "=== Last 200 lines of build.log ==="
+          if [ -f build/build.log ]; then
+            tail -n 200 build/build.log
+          else
+            echo "build.log not found!"
+          fi
+
+      - name: Upload Build Log on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-build-error-log
+          path: build/build.log
+          retention-days: 2
+          if-no-files-found: warn
 
       - name: Verify ISO Image
         run: |

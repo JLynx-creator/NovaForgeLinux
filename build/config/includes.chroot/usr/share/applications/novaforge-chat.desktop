@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=NovaForge AI Chat
+Comment=Chat with local AI models using Ollama
+Exec=konsole --hold -e novaforge-chat
+Icon=utilities-terminal
+Terminal=false
+Type=Application
+Categories=Development;System;
+Keywords=ai;chat;ollama;llm;local;chatbot;
+StartupNotify=true

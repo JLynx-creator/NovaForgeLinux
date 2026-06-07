@@ -1,0 +1,37 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0085: Configure Calamares Installer
+# ============================================================
+# Connects branding assets and sets up the live installer shortcut.
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Configuring Calamares Installer ==="
+
+# 1. Create branding directory if missing
+mkdir -p /etc/calamares/branding/novaforge
+
+# 2. Link Plymouth assets to Calamares branding (to avoid image duplication)
+if [ -f /usr/share/plymouth/themes/novaforge/logo.png ]; then
+    ln -sf /usr/share/plymouth/themes/novaforge/logo.png /etc/calamares/branding/novaforge/logo.png
+    ln -sf /usr/share/plymouth/themes/novaforge/logo.png /etc/calamares/branding/novaforge/welcome.png
+    
+    # Also copy logo to pixmaps for desktop applications / launcher shortcut
+    mkdir -p /usr/share/pixmaps
+    cp /usr/share/plymouth/themes/novaforge/logo.png /usr/share/pixmaps/novaforge-logo.png
+fi
+
+if [ -f /usr/share/plymouth/themes/novaforge/background.png ]; then
+    ln -sf /usr/share/plymouth/themes/novaforge/background.png /etc/calamares/branding/novaforge/wallpaper.png
+fi
+
+# 3. Create skeleton Desktop directory if missing and set permissions
+mkdir -p /etc/skel/Desktop
+chmod 755 /etc/skel/Desktop
+
+# 4. Make the desktop installer shortcut executable
+if [ -f /etc/skel/Desktop/install-novaforge.desktop ]; then
+    chmod +x /etc/skel/Desktop/install-novaforge.desktop
+fi
+
+echo "=== NovaForge Hook: Calamares Installer configured ==="

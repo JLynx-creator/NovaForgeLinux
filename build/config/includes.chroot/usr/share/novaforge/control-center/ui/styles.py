@@ -216,4 +216,30 @@ QTextEdit {
     font-family: "JetBrains Mono", monospace;
     font-size: 12px;
 }
+
+/* ── Table Widget ───────────────────────────────────── */
+QTableWidget {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+    border: 1px solid #313244;
+    border-radius: 8px;
+    gridline-color: #313244;
+}
+
+QTableWidget::item {
+    padding: 6px;
+}
+
+QTableWidget::item:selected {
+    background-color: rgba(0, 229, 255, 0.15);
+    color: #00e5ff;
+}
+
+QHeaderView::section {
+    background-color: #11111b;
+    color: #7f849c;
+    font-weight: bold;
+    border: 1px solid #313244;
+    padding: 6px;
+}
 """

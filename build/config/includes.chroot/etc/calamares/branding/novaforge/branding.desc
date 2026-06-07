@@ -1,0 +1,42 @@
+# ============================================================
+# NovaForge Linux — Calamares Branding
+# ============================================================
+# Description file for installer branding and visual theme.
+# ============================================================
+
+---
+componentName:   novaforge
+
+welcomeStyleCalamares:   false
+
+welcomeBackgroundImage:  wallpaper.png
+
+strings:
+    productName:         "NovaForge Linux"
+    shortProductName:    "NovaForge"
+    version:             "1.0.0"
+    shortVersion:        "1.0"
+    versionedName:       "NovaForge Linux 1.0.0"
+    shortVersionedName:  "NovaForge 1.0"
+    bootloaderEntryName: "NovaForge"
+    productUrl:          "https://github.com/JLynx-creator/NovaForgeLinux"
+    supportUrl:          "https://github.com/JLynx-creator/NovaForgeLinux/issues"
+    releaseNotesUrl:     "https://github.com/JLynx-creator/NovaForgeLinux/blob/main/ROADMAP.md"
+
+images:
+    productLogo:         "logo.png"
+    productIcon:         "logo.png"
+    productWelcome:      "welcome.png"
+
+slideshow:               "show.qml"
+slideshowAPI:            2
+
+style:
+   SidebarBackground:        "#0A0A1A"
+   SidebarText:              "#CDD6F4"
+   SidebarTextCurrent:       "#00E5FF"
+   SidebarBackgroundCurrent: "#1E1E2E"
+   
+   NavigationBackground:     "#0A0A1A"
+   NavigationText:           "#CDD6F4"
+   NavigationTextCurrent:    "#00E5FF"
