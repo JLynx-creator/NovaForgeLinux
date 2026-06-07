@@ -1,0 +1,39 @@
+# ============================================================
+# NovaForge Linux — Theming Dependencies
+# ============================================================
+# Packages required for the NovaForge visual experience
+# ============================================================
+
+# Kvantum (Qt theme engine)
+qt5-style-kvantum
+qt5-style-kvantum-themes
+
+# KDE Theme Tools
+plasma-sdk
+
+# Fonts
+fonts-inter
+fonts-jetbrains-mono
+fonts-firacode
+
+# Icon Theme
+papirus-icon-theme
+
+# Cursor Theme
+# Bibata cursors installed via hook
+
+# Plymouth
+plymouth
+plymouth-themes
+
+# GRUB
+grub2-common
+
+# GTK Theming
+breeze-gtk-theme
+
+# Python (for Control Center)
+python3-pyqt5
+python3-psutil
+python3-distro
+python3-dbus

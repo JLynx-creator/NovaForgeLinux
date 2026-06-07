@@ -1,0 +1,31 @@
+# ============================================================
+# NovaForge Linux — Multimedia Packages
+# ============================================================
+# Media codecs, players, and audio system
+# ============================================================
+
+# Audio System
+pipewire
+pipewire-audio
+pipewire-pulse
+wireplumber
+pipewire-alsa
+
+# Codecs
+ffmpeg
+gstreamer1.0-plugins-base
+gstreamer1.0-plugins-good
+gstreamer1.0-plugins-bad
+gstreamer1.0-plugins-ugly
+gstreamer1.0-libav
+gstreamer1.0-vaapi
+ubuntu-restricted-extras
+
+# Video Player
+vlc
+
+# Image Viewer (KDE)
+# gwenview already in kde.list
+
+# Audio Player
+elisa

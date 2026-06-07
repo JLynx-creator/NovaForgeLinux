@@ -1,0 +1,32 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0040: Configure Plymouth
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Configuring Plymouth ==="
+
+# Ensure plymouth and plymouth-themes are installed
+if ! dpkg -s plymouth >/dev/null 2>&1; then
+    echo "[NovaForge Hook] Installing plymouth packages..."
+    apt-get install -y --no-install-recommends plymouth plymouth-themes
+fi
+
+# Ensure correct permissions on the theme directory
+chmod -R 755 /usr/share/plymouth/themes/novaforge
+
+# Register the custom theme using update-alternatives
+update-alternatives --install \
+    /usr/share/plymouth/themes/default.plymouth \
+    default.plymouth \
+    /usr/share/plymouth/themes/novaforge/novaforge.plymouth \
+    150
+
+# Set the custom theme as active
+update-alternatives --set default.plymouth /usr/share/plymouth/themes/novaforge/novaforge.plymouth
+
+# Regenerate initramfs so the splash is embedded in the boot image
+echo "[NovaForge Hook] Updating initramfs..."
+update-initramfs -u -k all
+
+echo "=== NovaForge Hook: Plymouth configuration completed ==="

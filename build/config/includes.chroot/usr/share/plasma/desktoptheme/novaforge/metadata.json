@@ -1,0 +1,11 @@
+{
+    "KPlugin": {
+        "Id": "novaforge",
+        "Name": "NovaForge",
+        "Description": "NovaForge Linux Plasma Desktop Theme",
+        "Authors": [{ "Name": "NovaForge Linux Project" }],
+        "Version": "1.0.0",
+        "License": "MIT"
+    },
+    "X-Plasma-API": 2
+}

@@ -1,0 +1,19 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "NovaForge Linux Project",
+                "Email": "contact@novaforge-linux.org"
+            }
+        ],
+        "Description": "NovaForge Linux Global Theme — Dark mode with cyan neon accents",
+        "Id": "org.novaforge.theme",
+        "Name": "NovaForge",
+        "Version": "1.0.0",
+        "Website": "https://github.com/novaforge-linux",
+        "License": "MIT",
+        "Category": "Plasma Look And Feel"
+    },
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "X-Plasma-APIVersion": 2
+}

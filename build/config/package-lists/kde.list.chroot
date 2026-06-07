@@ -1,0 +1,60 @@
+# ============================================================
+# NovaForge Linux — KDE Plasma Desktop Packages
+# ============================================================
+# KDE Plasma 6 desktop environment and core applications
+# ============================================================
+
+# KDE Plasma Desktop
+kde-plasma-desktop
+plasma-workspace
+plasma-workspace-wayland
+
+# Display Manager
+sddm
+kde-config-sddm
+
+# KDE Core Applications
+konsole
+dolphin
+kate
+ark
+spectacle
+gwenview
+okular
+kcalc
+
+# System Tools
+plasma-systemmonitor
+plasma-discover
+kmenuedit
+systemsettings
+kde-spectacle
+
+# Plasma Widgets & Addons
+plasma-widgets-addons
+kdeplasma-addons
+
+# File Management
+dolphin-plugins
+kio-extras
+ffmpegthumbs
+kdegraphics-thumbnailers
+
+# KDE Integration
+kde-config-gtk-style
+kde-config-gtk-style-preview
+breeze-gtk-theme
+phonon4qt5-backend-vlc
+
+# Wayland Support
+plasma-wayland-protocols
+xwayland
+kwayland-integration
+
+# Notifications
+plasma-pa
+plasma-nm
+
+# Printing (optional, can be disabled)
+print-manager
+cups

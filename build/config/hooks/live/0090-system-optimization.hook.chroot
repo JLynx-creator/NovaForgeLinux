@@ -1,0 +1,49 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0090: System Optimization
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Optimizing System ==="
+
+# 1. Disable resource-heavy or unnecessary background services
+SERVICES_TO_DISABLE="cups-browsed ModemManager apport whoopsie unattended-upgrades"
+
+for svc in $SERVICES_TO_DISABLE; do
+    if systemctl list-unit-files | grep -q "^${svc}\.service"; then
+        echo "[NovaForge Hook] Disabling service: ${svc}..."
+        systemctl disable "${svc}" || true
+        systemctl mask "${svc}" || true
+    fi
+done
+
+# 2. Add custom sysctl parameters for performance and gaming/AI workloads
+echo "[NovaForge Hook] Writing sysctl performance tweaks..."
+cat > /etc/sysctl.d/99-novaforge-performance.conf << EOF
+# Reduce swapping to disk for better responsiveness
+vm.swappiness=15
+
+# Increase virtual memory map count (needed for Steam Play/Proton and heavy AI stacks)
+vm.max_map_count=1048576
+
+# Increase maximum file descriptors (important for multi-threaded compilation and AI pipelines)
+fs.file-max=2097152
+fs.inotify.max_user_watches=524288
+fs.inotify.max_user_instances=512
+
+# Network responsiveness improvements
+net.core.default_qdisc=fq
+net.ipv4.tcp_congestion_control=bbr
+EOF
+
+# 3. Increase security/PAM resource limits for developers and gaming
+echo "[NovaForge Hook] Configuring security limits..."
+cat >> /etc/security/limits.conf << EOF
+# NovaForge Custom Limits
+*               soft    nofile          1048576
+*               hard    nofile          1048576
+*               soft    memlock         unlimited
+*               hard    memlock         unlimited
+EOF
+
+echo "=== NovaForge Hook: System optimization completed ==="

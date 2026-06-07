@@ -1,0 +1,25 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0020: Install Extras
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Installing Extras ==="
+
+# 1. Install VS Code
+echo "[NovaForge Hook] Installing Visual Studio Code..."
+apt-get install -y code
+
+# 2. Install Ollama (AI/LLM runner)
+echo "[NovaForge Hook] Installing Ollama..."
+# We download and run the official installer script, setting HOME to /tmp to prevent writing to builder home
+export HOME=/tmp
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Enable Ollama service
+if [ -f /etc/systemd/system/ollama.service ] || [ -f /lib/systemd/system/ollama.service ]; then
+    echo "[NovaForge Hook] Enabling Ollama systemd service..."
+    systemctl enable ollama || true
+fi
+
+echo "=== NovaForge Hook: Extras installation completed ==="

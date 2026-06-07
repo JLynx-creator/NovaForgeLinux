@@ -1,0 +1,33 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0100: Build Cleanup
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Cleaning Up Build Files ==="
+
+# 1. Purge unnecessary packages and apt caches
+echo "[NovaForge Hook] Cleaning package caches..."
+apt-get autoremove -y
+apt-get clean
+rm -rf /var/lib/apt/lists/*
+
+# 2. Clean temporary files and directories
+echo "[NovaForge Hook] Purging temporary paths..."
+rm -rf /tmp/* /tmp/.* 2>/dev/null || true
+rm -rf /var/tmp/* /var/tmp/.* 2>/dev/null || true
+
+# 3. Truncate logs
+echo "[NovaForge Hook] Clearing build logs..."
+find /var/log -type f -exec truncate -s 0 {} \;
+
+# 4. Clear machine-id so it gets uniquely generated at target boot
+echo "[NovaForge Hook] Clearing machine ID..."
+if [ -f /etc/machine-id ]; then
+    truncate -s 0 /etc/machine-id
+fi
+if [ -f /var/lib/dbus/machine-id ]; then
+    rm -f /var/lib/dbus/machine-id
+fi
+
+echo "=== NovaForge Hook: Cleanup completed ==="

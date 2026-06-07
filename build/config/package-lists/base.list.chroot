@@ -1,0 +1,79 @@
+# ============================================================
+# NovaForge Linux — Base System Packages
+# ============================================================
+# Core system packages required for a functional desktop OS
+# ============================================================
+
+# Kernel and boot
+linux-generic
+linux-headers-generic
+
+# Init and system
+systemd
+dbus
+udev
+
+# Core utilities
+ubuntu-minimal
+coreutils
+sudo
+bash
+bash-completion
+sed
+grep
+gawk
+findutils
+less
+nano
+vim-tiny
+file
+tree
+
+# Networking
+network-manager
+network-manager-gnome
+wpasupplicant
+wireless-tools
+net-tools
+iputils-ping
+dnsutils
+openssh-client
+ca-certificates
+
+# Filesystem
+ntfs-3g
+exfat-fuse
+exfatprogs
+dosfstools
+btrfs-progs
+xfsprogs
+e2fsprogs
+udisks2
+
+# Hardware support
+linux-firmware
+firmware-sof-signed
+fwupd
+usbutils
+pciutils
+lm-sensors
+acpi
+acpid
+thermald
+tlp
+
+# Localization
+locales
+console-setup
+keyboard-configuration
+
+# Security
+apparmor
+ufw
+
+# Compression
+zip
+unzip
+p7zip-full
+xz-utils
+zstd

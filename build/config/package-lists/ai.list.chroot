@@ -1,0 +1,34 @@
+# ============================================================
+# NovaForge Linux — AI/ML Development Packages
+# ============================================================
+# Packages for AI and machine learning development
+# ============================================================
+
+# Python Scientific Stack
+python3-numpy
+python3-scipy
+python3-pandas
+python3-matplotlib
+python3-seaborn
+python3-sklearn
+python3-h5py
+
+# Jupyter
+jupyter-notebook
+jupyter-core
+python3-ipykernel
+python3-nbconvert
+
+# Image Processing
+python3-pil
+python3-opencv
+
+# Data Tools
+python3-sqlalchemy
+python3-requests
+python3-yaml
+python3-toml
+python3-tqdm
+
+# Ollama installed via hook (curl script)
+# PyTorch / TensorFlow installed via setup script (CUDA dependent)

@@ -1,0 +1,35 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0060: Install Themes
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Installing Visual Themes ==="
+
+# Create standard icons directory
+mkdir -p /usr/share/icons
+
+# 1. Download and Install Bibata Modern Ice Cursor Theme
+echo "[NovaForge Hook] Downloading Bibata Modern Ice cursor..."
+BIBATA_URL="https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.7/Bibata-Modern-Ice.tar.xz"
+curl -fsSL "$BIBATA_URL" -o /tmp/bibata.tar.xz
+tar -xf /tmp/bibata.tar.xz -C /usr/share/icons/
+rm /tmp/bibata.tar.xz
+echo "[NovaForge Hook] Bibata Cursor installed."
+
+# 2. Download and Install Tela Circle Icon Theme
+echo "[NovaForge Hook] Installing Tela Circle Icon Theme..."
+# Clone shallow repository to save bandwidth and build time
+git clone --depth 1 https://github.com/vinceliuice/tela-icon-theme.git /tmp/tela-icons
+cd /tmp/tela-icons
+# Run the installer script for Tela Circle colors and variants
+./install.sh -d /usr/share/icons -c
+# Clean up temporary files
+cd /
+rm -rf /tmp/tela-icons
+echo "[NovaForge Hook] Tela Circle Icons installed."
+
+# Update theme caches
+gtk-update-icon-cache -f /usr/share/icons/Tela-circle-dark || true
+
+echo "=== NovaForge Hook: Visual Themes installed ==="

@@ -1,0 +1,21 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0110: Finalize Build
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Finalizing Build ==="
+
+# Record final build timestamp and metadata
+BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+if [ -f /etc/novaforge/release ]; then
+    echo "BUILD_TIMESTAMP=${BUILD_TIMESTAMP}" >> /etc/novaforge/release
+    echo "BUILD_HOST=$(hostname 2>/dev/null || echo 'builder')" >> /etc/novaforge/release
+fi
+
+# Ensure all system configuration files in /etc have safe permissions
+chmod -R 755 /etc/novaforge
+
+echo "[NovaForge Hook] Distribution build finalized successfully!"
+echo "=== NovaForge Hook: Finalization completed ==="

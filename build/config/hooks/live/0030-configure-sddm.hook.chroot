@@ -1,0 +1,31 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0030: Configure SDDM
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Configuring SDDM ==="
+
+# Ensure SDDM is installed (should be from package list, but double check)
+if ! dpkg -s sddm >/dev/null 2>&1; then
+    echo "[NovaForge Hook] Installing sddm..."
+    apt-get install -y --no-install-recommends sddm
+fi
+
+# Ensure sddm.conf.d exists and copy config if not there
+mkdir -p /etc/sddm.conf.d
+chmod 644 /etc/sddm.conf.d/novaforge.conf
+
+# Set permissions for the sddm theme
+chmod -R 755 /usr/share/sddm/themes/novaforge
+
+# Disable other display managers if active (like gdm3 or lightdm)
+if [ -f /etc/init.d/gdm3 ]; then
+    echo "[NovaForge Hook] Disabling gdm3..."
+    systemctl disable gdm3 || true
+fi
+
+# Enable SDDM service
+systemctl enable sddm || true
+
+echo "=== NovaForge Hook: SDDM configuration completed ==="

@@ -1,0 +1,35 @@
+#!/bin/bash
+# ============================================================
+# NovaForge Linux — live-build Configuration
+# ============================================================
+# This script configures the live-build environment for
+# building the NovaForge Linux ISO image.
+# ============================================================
+
+set -e
+
+lb config noauto \
+    --mode ubuntu \
+    --distribution noble \
+    --archive-areas "main restricted universe multiverse" \
+    --architectures amd64 \
+    --binary-images iso-hybrid \
+    --bootappend-live "boot=casper quiet splash" \
+    --mirror-bootstrap "http://archive.ubuntu.com/ubuntu" \
+    --mirror-chroot "http://archive.ubuntu.com/ubuntu" \
+    --mirror-binary "http://archive.ubuntu.com/ubuntu" \
+    --mirror-chroot-security "http://security.ubuntu.com/ubuntu" \
+    --mirror-binary-security "http://security.ubuntu.com/ubuntu" \
+    --memtest none \
+    --iso-application "NovaForge Linux" \
+    --iso-publisher "NovaForge Linux Project; https://github.com/novaforge-linux" \
+    --iso-volume "NovaForge-Linux" \
+    --debootstrap-options "--variant=minbase" \
+    --apt-recommends true \
+    --security true \
+    --updates true \
+    --cache true \
+    --cache-packages true \
+    "${@}"
+
+echo "[NovaForge] Configuration complete."

@@ -1,0 +1,54 @@
+# ============================================================
+# NovaForge Linux — System Utilities
+# ============================================================
+# Essential system utilities and tools
+# ============================================================
+
+# System Monitoring
+htop
+btop
+iotop
+iftop
+neofetch
+
+# Disk Management
+gparted
+baobab
+smartmontools
+
+# Backup
+timeshift
+
+# Flatpak
+flatpak
+
+# Archive Management
+# ark already in kde.list
+
+# Terminal Multiplexer
+tmux
+screen
+
+# Text Processing
+ripgrep
+fd-find
+bat
+fzf
+
+# System Info
+inxi
+lshw
+hwinfo
+
+# Power Management
+powertop
+
+# Fonts
+fonts-noto
+fonts-noto-color-emoji
+
+# Misc
+xdg-utils
+xdg-user-dirs
+xclip
+wl-clipboard

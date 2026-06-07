@@ -1,0 +1,75 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0070: Configure KDE Defaults
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Configuring KDE Defaults ==="
+
+# Set correct permissions on skeleton files
+chmod -R 755 /etc/skel/.config || true
+chmod -R 755 /etc/skel/.local || true
+
+# Set the system-wide KDE globals and environment defaults
+mkdir -p /etc/xdg
+
+# Configure default global theme and scheme for any user session
+cat > /etc/xdg/kdeglobals << EOF
+[Theme]
+ColorScheme=NovaForge
+Name=NovaForge
+
+[General]
+ColorScheme=NovaForge
+IconTheme=Tela-circle-dark
+lookAndFeelPackage=org.novaforge.theme
+fixed=JetBrains Mono,11,-1,5,400,0,0,0,0,0,0,0,Regular
+font=Inter,10,-1,5,400,0,0,0,0,0,0,0,Regular
+menuFont=Inter,10,-1,5,400,0,0,0,0,0,0,0,Regular
+smallestReadableFont=Inter,8,-1,5,400,0,0,0,0,0,0,0,Regular
+toolBarFont=Inter,10,-1,5,400,0,0,0,0,0,0,0,Regular
+
+[KDE]
+ShowDeleteCommand=true
+SingleClick=false
+EOF
+
+# Ensure KWin compositor default options
+cat > /etc/xdg/kwinrc << EOF
+[Compositing]
+Backend=OpenGL
+GLCore=true
+LatencyPolicy=Low
+AnimationSpeed=3
+
+[Desktops]
+Number=4
+Rows=2
+EOF
+
+# Copy the custom widgets (panel layout, lock screen) to plasma defaults
+mkdir -p /usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/
+# Symlink or copy layouts so they are recognized by KDE shell config
+mkdir -p /usr/share/plasma/layout-templates/org.novaforge.desktop/
+cat > /usr/share/plasma/layout-templates/org.novaforge.desktop/metadata.json << EOF
+{
+    "KPlugin": {
+        "Id": "org.novaforge.desktop",
+        "Name": "NovaForge Desktop Layout",
+        "Description": "NovaForge Linux Default Top Bar & Bottom Dock Layout",
+        "ServiceTypes": ["Plasma/LayoutTemplate"],
+        "Authors": [{"Name": "NovaForge Linux Project"}]
+    }
+}
+EOF
+
+# Ensure kscreenlocker is using the NovaForge SDDM/Lock screen wallpaper
+cat > /etc/xdg/kscreenlockerrc << EOF
+[Daemon]
+Autolock=true
+Timeout=10
+[Greeter]
+Theme=org.novaforge.theme
+EOF
+
+echo "=== NovaForge Hook: KDE Defaults configured ==="

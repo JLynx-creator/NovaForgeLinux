@@ -1,0 +1,22 @@
+#!/bin/bash
+# ============================================================
+# NovaForge Linux — live-build Build Wrapper
+# ============================================================
+
+set -e
+
+echo "============================================"
+echo "  NovaForge Linux — Building ISO"
+echo "  Started: $(date)"
+echo "============================================"
+
+lb build noauto 2>&1 | tee build.log
+
+BUILD_EXIT=${PIPESTATUS[0]}
+
+echo "============================================"
+echo "  Build finished: $(date)"
+echo "  Exit code: ${BUILD_EXIT}"
+echo "============================================"
+
+exit ${BUILD_EXIT}

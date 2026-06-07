@@ -1,0 +1,66 @@
+name: Build NovaForge Linux ISO
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Free Disk Space
+        run: |
+          echo "=== Freeing up disk space on Runner ==="
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+      - name: Install Build Dependencies
+        run: |
+          echo "=== Installing live-build and tools ==="
+          sudo apt-get update
+          sudo apt-get install -y \
+            live-build \
+            debootstrap \
+            xorriso \
+            squashfs-tools \
+            mtools \
+            dosfstools \
+            grub-pc-bin \
+            grub-efi-amd64-bin \
+            isolinux \
+            fdisk
+
+      - name: Initialize live-build configuration
+        run: |
+          echo "=== Configuring build environment ==="
+          make version
+
+      - name: Compile ISO Image
+        run: |
+          echo "=== Starting compilation ==="
+          # Execute build with sudo since live-build mounts loop devices and changes root namespaces
+          sudo make iso
+
+      - name: Verify ISO Image
+        run: |
+          echo "=== Validating compilation artifact ==="
+          make validate
+
+      - name: Upload ISO Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NovaForge-Linux-ISO
+          path: |
+            output/*.iso
+            output/*.sha256
+            output/*.md5
+          retention-days: 5
+          if-no-files-found: error

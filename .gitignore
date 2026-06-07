@@ -1,0 +1,55 @@
+# ===========================
+# NovaForge Linux .gitignore
+# ===========================
+
+# Live-build artifacts
+build/chroot/
+build/binary/
+build/.build/
+build/cache/
+build/live-image-*
+build/config/binary
+build/config/bootstrap
+build/config/chroot
+build/config/common
+build/config/source
+
+# ISO output
+output/*.iso
+output/*.zsync
+output/*.md5
+output/*.sha256
+*.iso
+
+# Build logs
+build.log
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.code-workspace
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build_python/
+*.egg
+
+# Node
+node_modules/
+
+# Generated fonts
+*.pf2
+!build/config/includes.chroot/usr/share/grub/themes/novaforge/font.pf2

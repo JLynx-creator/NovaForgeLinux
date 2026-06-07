@@ -1,0 +1,11 @@
+[SddmGreeterTheme]
+Name=NovaForge
+Description=NovaForge Linux Login Theme — Dark glassmorphism with neon accents
+Author=NovaForge Linux Project
+Version=1.0
+Website=https://github.com/novaforge-linux
+Screenshot=preview.png
+MainScript=Main.qml
+ConfigFile=theme.conf
+TranslationsDirectory=translations
+Type=sddm-theme

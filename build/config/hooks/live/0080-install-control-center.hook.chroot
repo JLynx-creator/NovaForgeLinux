@@ -1,0 +1,25 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0080: Install Control Center
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Installing Control Center ==="
+
+# Ensure PyQt5, psutil and Polkit are installed
+apt-get install -y --no-install-recommends \
+    python3-pyqt5 \
+    python3-psutil \
+    policykit-1 \
+    pkexec
+
+# Set executable permission on main.py
+chmod +x /usr/share/novaforge/control-center/main.py
+
+# Create system launcher link
+ln -sf /usr/share/novaforge/control-center/main.py /usr/bin/novaforge-control-center
+
+# Fix launcher file permissions
+chmod 644 /usr/share/applications/novaforge-control-center.desktop
+
+echo "=== NovaForge Hook: Control Center installation completed ==="

@@ -1,0 +1,156 @@
+# ============================================================
+# NovaForge Linux — Plymouth Boot Animation Script
+# ============================================================
+# A smooth, modern boot splash with:
+#   - Dark gradient background
+#   - Centered NovaForge logo with fade-in
+#   - Pulsing progress dots (5 dots, cyan neon)
+#   - Smooth password prompt styling
+# ============================================================
+
+# ── Background ─────────────────────────────────────────────
+# Deep dark gradient (matches NovaForge dark palette)
+Window.SetBackgroundTopColor(0.04, 0.04, 0.10);     # #0A0A1A
+Window.SetBackgroundBottomColor(0.07, 0.07, 0.11);   # #11111B
+
+# ── Logo ───────────────────────────────────────────────────
+logo_image = Image("logo.png");
+logo_sprite = Sprite(logo_image);
+logo_sprite.SetX(Window.GetWidth() / 2 - logo_image.GetWidth() / 2);
+logo_sprite.SetY(Window.GetHeight() / 2 - logo_image.GetHeight() / 2 - 60);
+logo_sprite.SetOpacity(0);
+
+# ── Progress Dots ──────────────────────────────────────────
+# 5 dots that pulse sequentially
+NUM_DOTS = 5;
+DOT_SPACING = 24;
+DOT_Y_OFFSET = 80;
+
+dot_inactive = Image("progress-dot.png");
+dot_active = Image("progress-dot-active.png");
+
+dots = [];
+for (i = 0; i < NUM_DOTS; i++) {
+    dots[i] = Sprite(dot_inactive);
+    dot_total_width = NUM_DOTS * DOT_SPACING;
+    dot_x = Window.GetWidth() / 2 - dot_total_width / 2 + i * DOT_SPACING;
+    dot_y = Window.GetHeight() / 2 + DOT_Y_OFFSET;
+    dots[i].SetX(dot_x);
+    dots[i].SetY(dot_y);
+    dots[i].SetOpacity(0);
+}
+
+# ── Branding Text ─────────────────────────────────────────
+branding_text = Image.Text("NovaForge Linux", 0.00, 0.90, 1.00, 1, "Inter");
+branding_sprite = Sprite(branding_text);
+branding_sprite.SetX(Window.GetWidth() / 2 - branding_text.GetWidth() / 2);
+branding_sprite.SetY(Window.GetHeight() / 2 + DOT_Y_OFFSET + 40);
+branding_sprite.SetOpacity(0);
+
+# ── Animation State ────────────────────────────────────────
+global.frame = 0;
+global.logo_opacity = 0;
+global.dot_opacity = 0;
+global.active_dot = 0;
+global.text_opacity = 0;
+global.progress_val = 0;
+
+# ── Boot Progress Callback ─────────────────────────────────
+fun boot_progress_callback(duration, progress) {
+    global.progress_val = progress;
+}
+Plymouth.SetBootProgressFunction(boot_progress_callback);
+
+# ── Main Animation Loop ────────────────────────────────────
+fun refresh_callback() {
+    global.frame++;
+
+    # Phase 1: Logo fade-in (frames 0-40)
+    if (global.frame < 40) {
+        global.logo_opacity = global.frame / 40.0;
+        if (global.logo_opacity > 1) global.logo_opacity = 1;
+        logo_sprite.SetOpacity(global.logo_opacity);
+    } else {
+        logo_sprite.SetOpacity(1);
+    }
+
+    # Phase 2: Dots fade-in (frames 30-50)
+    if (global.frame > 30 && global.frame < 50) {
+        global.dot_opacity = (global.frame - 30) / 20.0;
+        if (global.dot_opacity > 1) global.dot_opacity = 1;
+        for (i = 0; i < NUM_DOTS; i++) {
+            dots[i].SetOpacity(global.dot_opacity);
+        }
+    } else if (global.frame >= 50) {
+        for (i = 0; i < NUM_DOTS; i++) {
+            dots[i].SetOpacity(1);
+        }
+    }
+
+    # Phase 3: Text fade-in (frames 40-60)
+    if (global.frame > 40 && global.frame < 60) {
+        global.text_opacity = (global.frame - 40) / 20.0;
+        if (global.text_opacity > 1) global.text_opacity = 1;
+        branding_sprite.SetOpacity(global.text_opacity);
+    } else if (global.frame >= 60) {
+        branding_sprite.SetOpacity(1);
+    }
+
+    # Phase 4: Dot cycling animation (continuous)
+    if (global.frame >= 50) {
+        # Change active dot every 12 frames
+        global.active_dot = Math.Int((global.frame - 50) / 12) % NUM_DOTS;
+
+        for (i = 0; i < NUM_DOTS; i++) {
+            if (i == global.active_dot) {
+                dots[i].SetImage(dot_active);
+            } else {
+                dots[i].SetImage(dot_inactive);
+            }
+        }
+    }
+}
+Plymouth.SetRefreshFunction(refresh_callback);
+
+# ── Password Prompt ────────────────────────────────────────
+fun display_password_callback(prompt, bullets) {
+    # Create password prompt
+    prompt_image = Image.Text(prompt, 0.80, 0.84, 0.96, 1, "Inter");
+    prompt_sprite = Sprite(prompt_image);
+    prompt_sprite.SetX(Window.GetWidth() / 2 - prompt_image.GetWidth() / 2);
+    prompt_sprite.SetY(Window.GetHeight() / 2 + 130);
+
+    # Create bullet string
+    bullet_str = "";
+    for (i = 0; i < bullets; i++) {
+        bullet_str += "● ";
+    }
+    
+    if (bullets > 0) {
+        bullet_image = Image.Text(bullet_str, 0.00, 0.90, 1.00, 1, "Inter");
+        bullet_sprite = Sprite(bullet_image);
+        bullet_sprite.SetX(Window.GetWidth() / 2 - bullet_image.GetWidth() / 2);
+        bullet_sprite.SetY(Window.GetHeight() / 2 + 160);
+    }
+}
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+
+# ── Message Display ────────────────────────────────────────
+fun message_callback(text) {
+    msg_image = Image.Text(text, 0.50, 0.52, 0.60, 1, "Inter");
+    msg_sprite = Sprite(msg_image);
+    msg_sprite.SetX(Window.GetWidth() / 2 - msg_image.GetWidth() / 2);
+    msg_sprite.SetY(Window.GetHeight() - 50);
+}
+Plymouth.SetMessageFunction(message_callback);
+
+# ── Mode Handling ──────────────────────────────────────────
+fun quit_callback() {
+    # Fade out everything
+    logo_sprite.SetOpacity(0);
+    branding_sprite.SetOpacity(0);
+    for (i = 0; i < NUM_DOTS; i++) {
+        dots[i].SetOpacity(0);
+    }
+}
+Plymouth.SetQuitFunction(quit_callback);

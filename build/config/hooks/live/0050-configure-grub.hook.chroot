@@ -1,0 +1,23 @@
+#!/bin/sh
+# ============================================================
+# NovaForge Linux — Hook 0050: Configure GRUB
+# ============================================================
+set -e
+
+echo "=== NovaForge Hook: Configuring GRUB ==="
+
+# Ensure GRUB config permissions are correct
+chmod 644 /etc/default/grub
+
+# Ensure GRUB theme directory permissions are correct
+chmod -R 755 /usr/share/grub/themes/novaforge
+
+# Regenerate GRUB config if update-grub tool is available
+if command -v update-grub >/dev/null 2>&1; then
+    echo "[NovaForge Hook] Regenerating GRUB menu config..."
+    update-grub || true
+else
+    echo "[NovaForge Hook] Warning: update-grub command not found, skipping."
+fi
+
+echo "=== NovaForge Hook: GRUB configuration completed ==="

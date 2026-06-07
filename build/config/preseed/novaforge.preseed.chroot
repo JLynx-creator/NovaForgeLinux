@@ -1,0 +1,3 @@
+# NovaForge Linux — Debconf Preseed
+# Set SDDM as the default display manager
+sddm shared/default-x-display-manager select sddm

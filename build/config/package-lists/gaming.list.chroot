@@ -1,0 +1,43 @@
+# ============================================================
+# NovaForge Linux — Gaming Packages
+# ============================================================
+# Gaming tools and drivers
+# ============================================================
+
+# Steam (installed via hook for latest version)
+# steam-installer
+
+# Gaming Tools
+lutris
+gamemode
+mangohud
+
+# Wine
+wine64
+wine32
+winetricks
+
+# Vulkan Support
+mesa-vulkan-drivers
+vulkan-tools
+libvulkan1
+
+# GPU Drivers (Mesa - open source)
+mesa-utils
+libgl1-mesa-dri
+libgl1-mesa-glx
+
+# 32-bit libraries for gaming compatibility
+libc6-i386
+lib32z1
+lib32gcc-s1
+lib32stdc++6
+
+# Game Controllers
+joystick
+jstest-gtk
+xboxdrv
+
+# Performance Monitoring
+intel-gpu-tools
+radeontop

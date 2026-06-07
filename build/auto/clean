@@ -1,0 +1,10 @@
+#!/bin/bash
+# ============================================================
+# NovaForge Linux — live-build Clean Wrapper
+# ============================================================
+
+set -e
+
+echo "[NovaForge] Cleaning build artifacts..."
+lb clean noauto "${@}"
+echo "[NovaForge] Clean complete."

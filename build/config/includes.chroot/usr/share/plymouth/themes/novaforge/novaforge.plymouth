@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=NovaForge
+Description=NovaForge Linux Boot Splash — Dark theme with animated logo and progress
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/novaforge
+ScriptFile=/usr/share/plymouth/themes/novaforge/novaforge.script
