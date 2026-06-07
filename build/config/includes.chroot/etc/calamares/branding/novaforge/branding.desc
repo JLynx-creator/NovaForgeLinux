@@ -14,9 +14,9 @@ welcomeBackgroundImage:  wallpaper.png
 strings:
     productName:         "NovaForge Linux"
     shortProductName:    "NovaForge"
-    version:             "2.0.3"
+    version:             "2.0.4"
     shortVersion:        "2.0"
-    versionedName:       "NovaForge Linux 2.0.3"
+    versionedName:       "NovaForge Linux 2.0.4"
     shortVersionedName:  "NovaForge 2.0"
     bootloaderEntryName: "NovaForge"
     productUrl:          "https://github.com/JLynx-creator/NovaForgeLinux"
